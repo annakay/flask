@@ -67,7 +67,9 @@ weights_path = 'best.pt'
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 
 # 画像のパスを指定
-image_path = '/content/Inside_of_the_Bus-1.jpg'
+#image_path = '/content/Inside_of_the_Bus-1.jpg'
+image_path = 'https://github.com/annakay/flask/blob/main/static/uploads/Inside_of_the_Bus-1.jpg'
+
 face_count = detect_faces(image_path, model)
 
 print(f"人数: {face_count}")
