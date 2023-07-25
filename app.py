@@ -11,6 +11,7 @@ import torch
 from flask import Flask
 app = Flask(__name__)
 import subprocess
+import os
 
 # YOLOv5のリポジトリをクローン
 subprocess.run(["git", "clone", "https://github.com/ultralytics/yolov5.git"])
@@ -46,7 +47,8 @@ def detect_faces(image_path, model):
 #git clone https://github.com/ultralytics/yolov5.git
 
 # 2. 必要なパッケージをインストール
-!pip install -r yolov5/requirements.txt
+#!pip install -r yolov5/requirements.txt
+os.system('pip install -r yolov5/requirements.txt')
 
 # 3. データセットの準備
 # 自分で作成したデータセットをアップロードし、適切なフォルダに配置します。
