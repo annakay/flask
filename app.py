@@ -10,6 +10,14 @@ Original file is located at
 import torch
 from flask import Flask
 app = Flask(__name__)
+import subprocess
+
+# YOLOv5のリポジトリをクローン
+subprocess.run(["git", "clone", "https://github.com/ultralytics/yolov5.git"])
+
+# 必要なパッケージをインストール
+subprocess.run(["pip", "install", "-r", "yolov5/requirements.txt"])
+
 
 def load_model(weights_path):
     # モデルのロード
