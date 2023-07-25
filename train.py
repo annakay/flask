@@ -38,6 +38,14 @@ import torch.nn as nn
 import yaml
 from torch.optim import lr_scheduler
 from tqdm import tqdm
+from PIL import Image
+
+try:
+    Image.open('https://github.com/annakay/flask/blob/main/Inside_of_the_Bus-1.jpg')
+except Exception as e:
+    print(f"Cannot open image: {e}")
+
+
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
