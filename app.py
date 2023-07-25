@@ -56,7 +56,8 @@ os.system('pip install -r yolov5/requirements.txt')
 
 # 4. YOLOv5の訓練
 # %cd /content/yolov5/
-!python train.py --img 640 --batch 16 --epochs 100 --data dataset.yaml --weights yolov5s.pt --name my_model
+#!python train.py --img 640 --batch 16 --epochs 100 --data dataset.yaml --weights yolov5s.pt --name my_model
+os.system('python train.py --img 640 --batch 16 --epochs 100 --data dataset.yaml --weights yolov5s.pt --name my_model')
 
 # 学習済みの重みのパスを指定
 weights_path = 'best.pt'
