@@ -41,7 +41,7 @@ from tqdm import tqdm
 from PIL import Image
 
 try:
-    Image.open('https://github.com/annakay/flask/tree/main/uploads/Inside_of_the_Bus-1.jpg')
+    Image.open('https://github.com/annakay/flask/Inside_of_the_Bus-1.jpg')
 except Exception as e:
     print(f"Cannot open image: {e}")
 
