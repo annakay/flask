@@ -65,6 +65,7 @@ def detect_faces(image_path, model):
 # Commented out IPython magic to ensure Python compatibility.
 # 1. YOLOv5のリポジトリをクローン
 #git clone https://github.com/ultralytics/yolov5.git
+os.system('git clone https://github.com/ultralytics/yolov5.git')
 
 # 2. 必要なパッケージをインストール
 #!pip install -r yolov5/requirements.txt
