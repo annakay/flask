@@ -29,38 +29,7 @@ import requests
 import tempfile
 from PIL import Image
 
-# あなたの画像のURL
-url = "https://github.com/annakay/flask/blob/main/Inside_of_the_Bus-1.jpg"
 
-# URLから画像を取得
-response = requests.get(url)
-
-# 一時ファイルを作成
-with tempfile.NamedTemporaryFile(suffix=".jpg") as fp:
-    # 画像データを一時ファイルに書き込む
-    fp.write(response.content)
-    fp.flush()
-
-    # 画像を開く
-    image = Image.open(fp.name)
-    #image_path = Image.open(fp.name)
-    
-def detect_faces(image_path, model):
-    # 画像から物体検出
-    results = model(image_path)
-    # 検出されたオブジェクトの情報を取得
-    detections = results.pandas().xyxy[0]
-
-    # 人数をカウントするための変数
-    face_count = 0
-
-    # 各オブジェクトについて
-    for _, row in detections.iterrows():
-        # オブジェクトのクラスが「person」であるかどうかをチェック
-        if row['name'] == 'person':
-            face_count += 1
-
-    return face_count
 
 # Commented out IPython magic to ensure Python compatibility.
 # 1. YOLOv5のリポジトリをクローン
@@ -95,4 +64,39 @@ image_path = 'https://github.com/annakay/flask/blob/main/Inside_of_the_Bus-1.jpg
 face_count = detect_faces(image_path, model)
 
 print(f"人数: {face_count}")
+
+
+# 画像のURL
+url = "https://github.com/annakay/flask/blob/main/Inside_of_the_Bus-1.jpg"
+
+# URLから画像を取得
+response = requests.get(url)
+
+# 一時ファイルを作成
+with tempfile.NamedTemporaryFile(suffix=".jpg") as fp:
+    # 画像データを一時ファイルに書き込む
+    fp.write(response.content)
+    fp.flush()
+
+    # 画像を開く
+    image = Image.open(fp.name)
+    #image_path = Image.open(fp.name)
+    
+def detect_faces(image_path, model):
+    # 画像から物体検出
+    results = model(image_path)
+    # 検出されたオブジェクトの情報を取得
+    detections = results.pandas().xyxy[0]
+
+    # 人数をカウントするための変数
+    face_count = 0
+
+    # 各オブジェクトについて
+    for _, row in detections.iterrows():
+        # オブジェクトのクラスが「person」であるかどうかをチェック
+        if row['name'] == 'person':
+            face_count += 1
+
+    return face_count
+
 
