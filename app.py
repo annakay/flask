@@ -25,6 +25,26 @@ def load_model(weights_path):
     model = torch.hub.load('ultralytics/yolov5', 'custom', path_or_model=weights_path)
     return model
 
+import requests
+import tempfile
+from PIL import Image
+
+# あなたの画像のURL
+url = "https://github.com/annakay/flask/blob/main/Inside_of_the_Bus-1.jpg"
+
+# URLから画像を取得
+response = requests.get(url)
+
+# 一時ファイルを作成
+with tempfile.NamedTemporaryFile(suffix=".jpg") as fp:
+    # 画像データを一時ファイルに書き込む
+    fp.write(response.content)
+    fp.flush()
+
+    # 画像を開く
+    #image = Image.open(fp.name)
+    image_path = Image.open(fp.name)
+    
 def detect_faces(image_path, model):
     # 画像から物体検出
     results = model(image_path)
