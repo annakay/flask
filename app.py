@@ -42,8 +42,8 @@ with tempfile.NamedTemporaryFile(suffix=".jpg") as fp:
     fp.flush()
 
     # 画像を開く
-    #image = Image.open(fp.name)
-    image_path = Image.open(fp.name)
+    image = Image.open(fp.name)
+    #image_path = Image.open(fp.name)
     
 def detect_faces(image_path, model):
     # 画像から物体検出
