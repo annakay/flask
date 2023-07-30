@@ -12,24 +12,72 @@ from flask import Flask
 app = Flask(__name__)
 import subprocess
 import os
+import requests
+import tempfile
+from PIL import Image
+
 
 # YOLOv5のリポジトリをクローン
-subprocess.run(["git", "clone", "https://github.com/ultralytics/yolov5.git"])
+#subprocess.run(["git", "clone", "https://github.com/ultralytics/yolov5.git"])
 
 # 必要なパッケージをインストール
-subprocess.run(["pip", "install", "-r", "yolov5/requirements.txt"])
-
+#subprocess.run(["pip", "install", "-r", "yolov5/requirements.txt"])
 
 def load_model(weights_path):
     # モデルのロード
     model = torch.hub.load('ultralytics/yolov5', 'custom', path_or_model=weights_path)
     return model
 
-import requests
-import tempfile
-from PIL import Image
+def detect_faces(image_path, model):
+    # 画像から物体検出
+    results = model(image_path)
+    # 検出されたオブジェクトの情報を取得
+    detections = results.pandas().xyxy[0]
+
+    # 人数をカウントするための変数
+    face_count = 0
+
+    # 各オブジェクトについて
+    for _, row in detections.iterrows():
+        # オブジェクトのクラスが「person」であるかどうかをチェック
+        if row['name'] == 'person':
+            face_count += 1
+
+    return face_count
+
+def run_yolo5(image_file):
+    # 学習済みの重みのパスを指定
+    weights_path = 'best.pt'
+
+    # モデルのロード
+    model = load_model(weights_path)
+
+    # 画像のパスを指定して人物を検出
+    face_count = detect_faces(image_file, model)
+
+    return face_count
 
 
+#face_count = detect_faces(image_path, model)
+#print(f"人数: {face_count}")
+
+
+# 画像のURL
+#url = "https://github.com/annakay/flask/blob/main/Inside_of_the_Bus-1.jpg"
+
+# URLから画像を取得
+#response = requests.get(url)
+
+# 一時ファイルを作成
+#with tempfile.NamedTemporaryFile(suffix=".jpg") as fp:
+    # 画像データを一時ファイルに書き込む
+    #fp.write(response.content)
+    #fp.flush()
+
+    # 画像を開く
+    #image = Image.open(fp.name)
+    #image_path = Image.open(fp.name)
+    
 
 # Commented out IPython magic to ensure Python compatibility.
 # 1. YOLOv5のリポジトリをクローン
@@ -59,44 +107,5 @@ model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 # 画像のパスを指定
 #image_path = '/content/Inside_of_the_Bus-1.jpg'
 #image_path = 'https://github.com/annakay/flask/blob/main/static/uploads/Inside_of_the_Bus-1.jpg'
-image_path = 'https://github.com/annakay/flask/blob/main/Inside_of_the_Bus-1.jpg'
-
-face_count = detect_faces(image_path, model)
-
-print(f"人数: {face_count}")
-
-
-# 画像のURL
-url = "https://github.com/annakay/flask/blob/main/Inside_of_the_Bus-1.jpg"
-
-# URLから画像を取得
-response = requests.get(url)
-
-# 一時ファイルを作成
-with tempfile.NamedTemporaryFile(suffix=".jpg") as fp:
-    # 画像データを一時ファイルに書き込む
-    fp.write(response.content)
-    fp.flush()
-
-    # 画像を開く
-    image = Image.open(fp.name)
-    #image_path = Image.open(fp.name)
-    
-def detect_faces(image_path, model):
-    # 画像から物体検出
-    results = model(image_path)
-    # 検出されたオブジェクトの情報を取得
-    detections = results.pandas().xyxy[0]
-
-    # 人数をカウントするための変数
-    face_count = 0
-
-    # 各オブジェクトについて
-    for _, row in detections.iterrows():
-        # オブジェクトのクラスが「person」であるかどうかをチェック
-        if row['name'] == 'person':
-            face_count += 1
-
-    return face_count
-
+#image_path = 'https://github.com/annakay/flask/blob/main/Inside_of_the_Bus-1.jpg'
 
