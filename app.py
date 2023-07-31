@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect
 from werkzeug.utils import secure_filename
 import cv2
 import numpy as np
+gunicorn app:app
 
 
 app = Flask(__name__)
