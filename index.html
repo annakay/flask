@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;  
+            margin: 0;
+            background: #f8f8f8;
+            font-family: Arial, sans-serif;
+        }
+        form {
+            text-align: center;
+        }
+        #preview {
+            width: 100%; 
+            text-align: center; 
+            background: #fff; 
+            padding: 20px 0;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<form id="image-form" action="/upload-image" method="post" enctype="multipart/form-data">
+    <p>人数を数える画像を選択してください</p>
+    <input type="file" name="file" id="fileInput" style="display:none" onchange="updateMessage()">
+    <input type="button" value="画像を選択する" onclick="document.getElementById('fileInput').click();"/>
+    <p id="message"></p>
+</form>
+
+<script>
+    function updateMessage() {
+        var input = document.querySelector('#fileInput');
+        var message = document.querySelector('#message');
+        var file = input.files[0];
+        
+        // ファイルが選択されている場合に拡張子をチェック
+        if (file) {
+            var ext = file.name.split('.').pop().toLowerCase();
+            var acceptedExts = ['jpg', 'jpeg', 'png', 'gif','bmp'];
+            
+            // 拡張子が受け入れ可能なものかどうかをチェック
+            if (acceptedExts.includes(ext)) {
+                // 受け入れ可能な拡張子のファイルならファイル名を表示
+                message.textContent = file.name;
+
+                // 確認ダイアログの表示
+                var preview = document.createElement('div');
+                preview.id = 'preview';
+                preview.innerHTML = '<img src="' + URL.createObjectURL(file) + '" width="600"><br>上記の画像で間違いないですか？<br><button onclick="acceptImage()">はい</button>&emsp;<button onclick="resetForm()">いいえ</button>';
+                document.body.insertBefore(preview, document.getElementById('image-form').nextSibling);
+            } else {
+                // 受け入れ可能な拡張子のファイルでない場合はエラーメッセージを表示
+                alert("エラー: 画像ファイル(jpg, jpeg, png, gif)を選択してください。");
+            }
+        }
+    }
+
+    function acceptImage() {
+        document.getElementById('image-form').submit();
+    }
+
+    function resetForm() {
+        var form = document.getElementById('image-form');
+        var preview = document.getElementById('preview');
+        var message = document.querySelector('#message');
+        form.reset();
+        if (preview) {
+            document.body.removeChild(preview);
+        }
+        message.textContent = ''; // ファイル名を消去
+    }
+</script>
+</body>
+</html>
