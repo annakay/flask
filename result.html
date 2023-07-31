@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>人数結果</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #f8f8f8;
+            font-family: Arial, sans-serif;
+        }
+        .result {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="result">
+        <h1>ファイル名：{{ filename }}</h1>
+        <h1>画像内の人数：{{ message }}</h1>
+        <img src="{{ '/static/uploads/' + filename }}" alt="Uploaded Image" style="max-width: 500px">
+        <br>
+        <a href="/">戻る</a>
+    </div>
+</body>
+</html>
