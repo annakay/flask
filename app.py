@@ -4,10 +4,12 @@ from werkzeug.utils import secure_filename
 import cv2
 import cvlib as cv
 import numpy as np
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = './static/uploads/'
+#UPLOAD_FOLDER = './static/uploads/'
+UPLOAD_FOLDER = 'static/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'gif'}
@@ -51,6 +53,9 @@ def upload_image():
         return redirect(request.url)
     
     file = request.files['file']
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    
     if file.filename == '':
         return redirect(request.url)
 
