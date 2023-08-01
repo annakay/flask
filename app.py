@@ -44,6 +44,9 @@ def index():
 
 @app.route('/upload-image', methods=['POST'])
 def upload_image():
+	if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
     if 'file' not in request.files:
         return redirect(request.url)
     
@@ -62,6 +65,10 @@ def upload_image():
         }
         return render_template('result.html', **result)
     return redirect(request.url)
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    return str(e), 10000
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 10000)))
