@@ -45,7 +45,7 @@ def index():
 @app.route('/upload-image', methods=['POST'])
 def upload_image():
 	if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+    	os.makedirs(UPLOAD_FOLDER)
 
     if 'file' not in request.files:
         return redirect(request.url)
