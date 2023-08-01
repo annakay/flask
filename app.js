@@ -1,5 +1,5 @@
 function sendRequest() {
-    fetch('http://localhost:5000/api', {
+    fetch('https://count-the-number-of-people.onrender.com', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
