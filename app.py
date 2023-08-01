@@ -61,5 +61,5 @@ def upload_image():
         return render_template('result.html', **result)
     return redirect(request.url)
 
-if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+#if __name__ == "__main__":
+#    app.run(port=5000, debug=True)
