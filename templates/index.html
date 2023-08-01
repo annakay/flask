@@ -51,7 +51,9 @@
                 var preview = document.createElement('div');
                 preview.id = 'preview';
                 preview.innerHTML = '<img src="' + URL.createObjectURL(file) + '" width="600"><br>上記の画像で間違いないですか？<br><button onclick="acceptImage()">はい</button>&emsp;<button onclick="resetForm()">いいえ</button>';
-                document.body.insertBefore(preview, document.getElementById('image-form').nextSibling);
+        		document.body.insertBefore(preview, document.getElementById('image-form').nextSibling);
+        		document.getElementById('image-form').onsubmit = acceptImage; // この行を追加
+
             } else {
                 // 受け入れ可能な拡張子のファイルでない場合はエラーメッセージを表示
                 alert("エラー: 画像ファイル(jpg, jpeg, png, gif)を選択してください。");
