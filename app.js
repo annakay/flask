@@ -1,5 +1,5 @@
 function sendRequest() {
-    fetch('https://count-the-number-of-people.onrender.com/static/uploads/', {
+    fetch('https://count-the-number-of-people.onrender.com/upload-image', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
