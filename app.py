@@ -28,12 +28,14 @@ def draw_bbox_cv2(img, bbox, labels, confidences):
         # ラベルと確信度を描画
         text = "{}: {:.4f}".format(label, confidence)
         cv2.putText(img, text, (start_x, start_y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+        
+    return img # 画像を返す
 
 def detect_people(image_path):
     image = cv2.imread(image_path)
     bbox, label, conf = cv.detect_common_objects(image)
-    output_image = draw_bbox_cv2(image, bbox, label, conf)  
-    cv2.imwrite(image_path, output_image)
+    output_image = draw_bbox_cv2(image, bbox, label, conf)  # 処理後の画像を受け取る
+    cv2.imwrite(image_path, output_image) # 画像を保存
     return label.count('person')
 
 @app.route('/')
