@@ -31,7 +31,7 @@ def draw_bbox_cv2(img, bbox, labels, confidences):
 def detect_people(image_path):
     image = cv2.imread(image_path)
     bbox, label, conf = cv.detect_common_objects(image)
-    output_image = draw_bbox_cv2(image, bbox, label, conf)  # 書き換え箇所
+    output_image = draw_bbox_cv2(image, bbox, label, conf)  
     cv2.imwrite(image_path, output_image)
     return label.count('person')
 
@@ -60,5 +60,5 @@ def upload_image():
         return render_template('result.html', **result)
     return redirect(request.url)
 
-if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+#if __name__ == "__main__":
+#    app.run(port=5000, debug=True)
