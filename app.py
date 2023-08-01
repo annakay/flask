@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect
 from werkzeug.utils import secure_filename
 import cv2
+import cvlib as cv
 import numpy as np
 
 app = Flask(__name__)
@@ -60,5 +61,5 @@ def upload_image():
         return render_template('result.html', **result)
     return redirect(request.url)
 
-#if __name__ == "__main__":
-#    app.run(port=5000, debug=True)
+if __name__ == "__main__":
+    app.run(port=5000, debug=True)
