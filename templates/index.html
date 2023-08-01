@@ -63,16 +63,17 @@
         document.getElementById('image-form').submit();
     }
 
-    function resetForm() {
-        var form = document.getElementById('image-form');
-        var preview = document.getElementById('preview');
-        var message = document.querySelector('#message');
-        form.reset();
-        if (preview) {
-            document.body.removeChild(preview);
-        }
-        message.textContent = ''; // ファイル名を消去
-    }
+	function resetForm() {
+    	var form = document.getElementById('image-form');
+    	var preview = document.getElementById('preview');
+    	var message = document.querySelector('#message');
+    	form.reset();
+    	if (preview && preview.parentNode) {
+        	preview.parentNode.removeChild(preview);
+    	}
+    message.textContent = ''; // ファイル名を消去
+}
+
 </script>
 </body>
 </html>
