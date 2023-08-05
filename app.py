@@ -7,9 +7,9 @@ import numpy as np
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static/uploads/')
 #UPLOAD_FOLDER = './static/uploads/'
-UPLOAD_FOLDER = 'static/uploads/'
+#UPLOAD_FOLDER = 'static/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'gif'}
@@ -35,8 +35,12 @@ def draw_bbox_cv2(img, bbox, labels, confidences):
 
 def detect_people(image_path):
     image = cv2.imread(image_path)
+    if image is None:
+        raise Exception(f"Failed to load image at {image_path}")
     bbox, label, conf = cv.detect_common_objects(image)
     output_image = draw_bbox_cv2(image, bbox, label, conf)  # 処理後の画像を受け取る
+    print(f"image_path: {image_path}") # 保存先のパスを出力
+    print(f"output_image type: {type(output_image)}") # output_imageの型を出力
     cv2.imwrite(image_path, output_image) # 画像を保存
     return label.count('person')
 
@@ -53,17 +57,15 @@ def upload_image():
         return redirect(request.url)
     
     file = request.files['file']
-    filename = secure_filename(file.filename)
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    
+
     if file.filename == '':
         return redirect(request.url)
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
-        people_count = detect_people(file_path)
+        file.save(file_path)  # ←ここでファイルを保存
+        people_count = detect_people(file_path)  # ←保存したファイルを物体検出に使用
         result = {
             "filename": f"{filename}", 
             "message": f"{people_count}人"
