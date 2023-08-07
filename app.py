@@ -5,6 +5,7 @@ import cv2
 import cvlib as cv
 import numpy as np
 from werkzeug.utils import secure_filename
+import urllib.request
 
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static/uploads/')
@@ -131,4 +132,9 @@ def handle_exception(e):
     return str(e), 10000
 
 if __name__ == "__main__":
+    weights_url = "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights"
+    weights_filepath = "./yolov4.weights"
+
+    if not os.path.exists(weights_filepath):
+        urllib.request.urlretrieve(weights_url, weights_filepath)
     app.run(host='0.0.0.0', debug=True , port=int(os.getenv('PORT', 10000)))
