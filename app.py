@@ -40,7 +40,7 @@ def detect_people(image_path):
         raise Exception(f"Failed to load image at {image_path}")
     
     # Load YOLO v4
-    net = cv2.dnn.readNet("https://drive.google.com/file/d/1xlDlBk79H6psU9Uto6kpdJ7kwJAMrazS/view?usp=drive_link", "yolov4.cfg")
+    net = cv2.dnn.readNet("./yolov4.weights", "yolov4.cfg")
 
     # Create a 4D blob from a frame.
     blob = cv2.dnn.blobFromImage(image, 1/255, (416, 416), [0,0,0], 1, crop=False)
@@ -134,7 +134,13 @@ def handle_exception(e):
 if __name__ == "__main__":
     weights_url = "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights"
     weights_filepath = "./yolov4.weights"
+    config_url = "https://github.com/AlexeyAB/darknet/raw/master/cfg/yolov4.cfg"
+    config_filepath = "./yolov4.cfg"
 
     if not os.path.exists(weights_filepath):
         urllib.request.urlretrieve(weights_url, weights_filepath)
+    
+    if not os.path.exists(config_filepath):
+        urllib.request.urlretrieve(config_url, config_filepath)
+
     app.run(host='0.0.0.0', debug=True , port=int(os.getenv('PORT', 10000)))
