@@ -37,12 +37,31 @@ def detect_people(image_path):
     image = cv2.imread(image_path)
     if image is None:
         raise Exception(f"Failed to load image at {image_path}")
-    bbox, label, conf = cv.detect_common_objects(image)
-    output_image = draw_bbox_cv2(image, bbox, label, conf)  # 処理後の画像を受け取る
-    print(f"image_path: {image_path}") # 保存先のパスを出力
-    print(f"output_image type: {type(output_image)}") # output_imageの型を出力
-    cv2.imwrite(image_path, output_image) # 画像を保存
-    return label.count('person')
+
+    # YOLOv4-tinyの設定と重みを指定
+    config_path = 'https://github.com/annakay/flask/blob/main/yolov4-tiny.cfg'
+    weights_path = 'https://github.com/annakay/flask/blob/main/yolov4-tiny.weights'
+    net = cv2.dnn.readNetFromDarknet(config_path, weights_path)
+    layer_names = net.getLayerNames()
+    output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+
+    # 画像の前処理
+    blob = cv2.dnn.blobFromImage(image, 1/255.0, (416, 416), swapRB=True, crop=False)
+    net.setInput(blob)
+    detections = net.forward(output_layers)
+
+    people_count = 0
+    for detection in detections:
+        for obj in detection:
+            scores = obj[5:]
+            class_id = np.argmax(scores)
+            confidence = scores[class_id]
+            if confidence > 0.5 and class_id == 0:  # class_id 0 is for 'person'
+                people_count += 1
+                # ここでバウンディングボックスを描画することもできます
+
+    return people_count
+
 
 @app.route('/')
 def index():
