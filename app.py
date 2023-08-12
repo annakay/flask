@@ -5,7 +5,6 @@ import cv2
 import cvlib as cv
 import numpy as np
 from werkzeug.utils import secure_filename
-import urllib.request
 
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static/uploads/')
@@ -38,65 +37,12 @@ def detect_people(image_path):
     image = cv2.imread(image_path)
     if image is None:
         raise Exception(f"Failed to load image at {image_path}")
-    
-    # Load YOLO v4
-    net = cv2.dnn.readNet("./yolov4.weights", "yolov4.cfg")
-
-    # Create a 4D blob from a frame.
-    blob = cv2.dnn.blobFromImage(image, 1/255, (416, 416), [0,0,0], 1, crop=False)
-
-    # Sets the blob as the input of the network
-    net.setInput(blob)
-
-    # Get the names of the output layers
-    layer_names = net.getLayerNames()
-    output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
-
-    # Perform a forward pass through the network
-    outs = net.forward(output_layers)
-
-    # Initialization
-    class_ids = []
-    confidences = []
-    boxes = []
-    height, width = image.shape[:2]
-
-    for out in outs:
-        for detection in out:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
-            # Object detected
-            if confidence > 0.5:
-                # Center coordinates
-                center_x = int(detection[0] * width)
-                center_y = int(detection[1] * height)
-                w = int(detection[2] * width)
-                h = int(detection[3] * height)
-                # Rectangle coordinates
-                x = int(center_x - w / 2)
-                y = int(center_y - h / 2)
-                boxes.append([x, y, w, h])
-                confidences.append(float(confidence))
-                class_ids.append(class_id)
-    
-    # Perform non maximum suppression for the bounding boxes to filter overlapping and low confident bounding boxes
-    indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
-
-    bbox, label, conf = [], [], []
-    for i in range(len(boxes)):
-        if i in indexes:
-            x, y, w, h = boxes[i]
-            label.append(str(class_ids[i])) # add class label
-            conf.append(confidences[i]) # add confidence score
-            bbox.append([x, y, x+w, y+h]) # add bounding box coordinates
-
+    bbox, label, conf = cv.detect_common_objects(image)
     output_image = draw_bbox_cv2(image, bbox, label, conf)  # 処理後の画像を受け取る
     print(f"image_path: {image_path}") # 保存先のパスを出力
     print(f"output_image type: {type(output_image)}") # output_imageの型を出力
     cv2.imwrite(image_path, output_image) # 画像を保存
     return label.count('person')
-
 
 @app.route('/')
 def index():
@@ -132,15 +78,4 @@ def handle_exception(e):
     return str(e), 10000
 
 if __name__ == "__main__":
-    weights_url = "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights"
-    weights_filepath = "./yolov4.weights"
-    config_url = "https://github.com/AlexeyAB/darknet/raw/master/cfg/yolov4.cfg"
-    config_filepath = "./yolov4.cfg"
-
-    if not os.path.exists(weights_filepath):
-        urllib.request.urlretrieve(weights_url, weights_filepath)
-    
-    if not os.path.exists(config_filepath):
-        urllib.request.urlretrieve(config_url, config_filepath)
-
     app.run(host='0.0.0.0', debug=True , port=int(os.getenv('PORT', 10000)))
