@@ -15,17 +15,13 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def detect_people(image_path):
-    print("Starting detect_people function...")
     image = cv2.imread(image_path)
     if image is None:
         raise Exception(f"Failed to load image at {image_path}")
 
-    print("Before readNetFromDarknet...")
     net = cv2.dnn.readNetFromDarknet('yolov4-tiny.cfg', 'yolov4-tiny.weights')
-    print("After readNetFromDarknet...")
     
     layer_names = net.getLayerNames()
-    print(f"Layer names: {layer_names}")
 
     blob = cv2.dnn.blobFromImage(image, 1/255.0, (416, 416), swapRB=True, crop=False)
     net.setInput(blob)
